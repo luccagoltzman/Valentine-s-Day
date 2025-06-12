@@ -108,21 +108,32 @@ const container = document.querySelector('.container');
 
 // Função para mover o botão
 function moveButton() {
-    // Obter as dimensões e posição do container
+    // Obter as dimensões e posição do container e dos botões
     const containerRect = container.getBoundingClientRect();
     const buttonRect = noBtn.getBoundingClientRect();
+    const yesBtnRect = yesBtn.getBoundingClientRect();
     
-    // Calcular os limites para o movimento
-    const minX = 0;
-    const maxX = containerRect.width - buttonRect.width;
-    const minY = 0;
-    const maxY = containerRect.height - buttonRect.height;
+    // Definir uma área limitada para o movimento (próxima ao botão "sim")
+    const areaWidth = Math.min(300, containerRect.width - buttonRect.width); // Máximo de 300px de largura
+    const areaHeight = Math.min(200, containerRect.height - buttonRect.height); // Máximo de 200px de altura
     
-    // Gerar posição aleatória dentro dos limites do container
-    const newX = Math.floor(Math.random() * maxX);
-    const newY = Math.floor(Math.random() * maxY);
+    // Calcular o centro da área de movimento (baseado na posição do botão "sim")
+    const centerX = yesBtnRect.right + areaWidth / 2;
+    const centerY = yesBtnRect.top;
     
-    // Aplicar a nova posição
+    // Gerar uma posição aleatória dentro da área limitada
+    const randomAngle = Math.random() * Math.PI * 2; // Ângulo aleatório
+    const randomRadius = Math.random() * 1000; // Raio aleatório (máximo 1000px)
+    
+    // Calcular nova posição usando coordenadas polares
+    let newX = centerX + Math.cos(randomAngle) * randomRadius;
+    let newY = centerY + Math.sin(randomAngle) * randomRadius;
+    
+    // Garantir que o botão permaneça dentro dos limites do container
+    newX = Math.max(0, Math.min(newX, containerRect.width - buttonRect.width));
+    newY = Math.max(yesBtnRect.top - 100, Math.min(newY, yesBtnRect.top + 100));
+    
+    // Aplicar a nova posição com animação suave
     noBtn.style.position = 'absolute';
     noBtn.style.left = `${newX}px`;
     noBtn.style.top = `${newY}px`;
